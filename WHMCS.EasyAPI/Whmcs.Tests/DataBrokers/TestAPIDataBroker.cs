@@ -23,15 +23,17 @@ namespace Whmcs.Tests.DataBrokers
                 {"pid", TestProductId.ToString()}
             };
 
+            // Create the APIService mock and set it up to return the TestOutputApiResponse string when we pass it in the expectedJson,
+            // which is created to mirror the JSON the APIDataBroker is expected to create.
             var mockAPIService = new Mock<IAPIService>();
             mockAPIService.Setup(a => a.GetData(expectedJson)).Returns(TestOutputApiResponse).Verifiable();
 
-            var mockJSONService = new Mock<IJSONService>();
+            var mockJSONService = new Mock<IJSONService>(); // In this test we don't care what JSON is returned so no setups for IJSONService.
 
-            var dataBroker = new APIDataBroker(mockAPIService.Object, mockJSONService.Object);
+            var dataBroker = new APIDataBroker(mockAPIService.Object, mockJSONService.Object); // Instantiate the class under test
 
             // Act
-            var result = dataBroker.GetProductsByProductId(TestProductId);
+            var result = dataBroker.GetProductsByProductId(TestProductId); // Invoke the method being tested.
 
             // Assert
             mockAPIService.Verify(a => a.GetData(expectedJson)); // Verify that APIService.GetData was called with the JSON we expect the APIDataBroker to pass to it.
@@ -46,9 +48,12 @@ namespace Whmcs.Tests.DataBrokers
             const string TestOutputApiResponse = "testresponse";
             var expectedResult = new ProductsResponse();
             
+            // As per above, set up the mock API service but this time it's just going to return junk test data
+            // because we aren't testing the API service in this test.
             var mockAPIService = new Mock<IAPIService>();
-            mockAPIService.Setup(a => a.GetData(testJson)).Returns(TestOutputApiResponse).Verifiable();
+            mockAPIService.Setup(a => a.GetData(testJson)).Returns(TestOutputApiResponse).Verifiable(); 
 
+            // Set up the Mock JSONService to return the expectedResult ProductsResponse object no matter what's passed into it
             var mockJSONService = new Mock<IJSONService>();
             mockJSONService.Setup(j => j.DeserialiseJSON<ProductsResponse>(It.IsAny<string>()))
                 .Returns(expectedResult);
@@ -59,6 +64,9 @@ namespace Whmcs.Tests.DataBrokers
             var result = dataBroker.GetProductsByProductId(TestProductId);
 
             // Assert
+
+            // Verify that the string we set the Mock JSONService object to return was returned by the method under test,
+            // and verify that the DeserialiseJSON<ProductsResponse> method was called on the Mock JSONService.
             Assert.AreEqual(expectedResult, result);
             mockJSONService.Verify(j => j.DeserialiseJSON<ProductsResponse>(It.IsAny<string>()));
         }
