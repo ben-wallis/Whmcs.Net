@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -50,18 +56,23 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DataBrokers\TestAPIDataBroker.cs" />
     <Compile Include="TestClients.cs" />
     <Compile Include="TestConnection.cs" />
     <Compile Include="TestProducts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestableData\GetTestData.cs" />
     <Compile Include="Testables\TestableDataStore.cs" />
+    <Compile Include="TestNewApi.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WHMCS.EasyAPI\Whmcs.csproj">
       <Project>{145a515a-dce2-4af4-988a-52936858b900}</Project>
       <Name>Whmcs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
